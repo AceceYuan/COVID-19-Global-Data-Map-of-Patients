@@ -1,0 +1,232 @@
+var myChart = echarts.init(document.getElementById('main'));
+function updateMap(num){
+			$(".control").show();
+			$(".control:eq("+num+")").hide();
+			myChart.clear();
+			var opt = null;
+			switch(num){
+				case 0:{
+					opt = {
+					        
+					        title: {
+					            text: 'COVID-19 - Cumulative domestic data',
+					            subtext: ' Data sourse',
+					            sublink: 'https://www.kaikeba.com'
+					        },
+					        
+					        tooltip: {
+					            trigger: 'item', 
+					            formatter: function (params, ticket, callback) {
+					                if(params.data)
+					                    return params.name+'<br/>'+params.data.value+' (unit)';
+					                else
+					                    return params.name+'<br/>No epidemic information';
+					            }
+					        },
+					        
+					        visualMap: {
+					            type: 'piecewise',
+					            pieces: [
+					                {gt: 2000, color: 'darkred'},                        // (1500, Infinity]
+					                {gt: 1300, lte: 2000, color: 'red', colorAlpha: 1},  // (1000, 1500]
+					                {gt: 800, lte: 1300, color: 'red', colorAlpha: 0.8},
+					                {gt: 500, lte: 800, color: 'red', colorAlpha: 0.6},
+					                {gt: 200, lte: 500, color: 'red', colorAlpha: 0.4},
+					                {gt: 50, lte: 200, color: 'red', colorAlpha: 0.3},
+					                {lt: 50, color: 'red', colorAlpha: 0.2}          // (-Infinity, 100)
+					            ],
+					        },
+					
+					        //concrete data
+					        series: [
+					            {
+					                name: 'Confirmed cases in all provinces',
+					                zoom:1.2,//zoom
+					                type: 'map', // VARIABLE SERIES
+					                map: 'china', // name of the map
+					                roam: true, // Enable mouse zooming and scrolling
+					                label: { // text label on the graph,shows the data name by default
+					                    show: true,
+					                    formatter: '{b}', // b as name of the data，c as value of the data
+					                    fontSize: 8
+					                },
+					                data: data.data,
+					            }
+					        ]
+					    };
+					
+				}
+				break;
+				case 1:{
+					opt = {
+					        // Set the title and subtitle and subtitle jump link
+					        title: {
+					            text: 'COVID-19 - New domestic data',
+					            subtext: 'Data sourse',
+					            sublink: 'https://www.kaikeba.com'
+					        },
+					        
+					        tooltip: {
+					            trigger: 'item', 
+					            formatter:  function (params, ticket, callback) {
+					                if(params.data)
+					                    return params.name+'<br/>'+params.data.value+' (unit)';
+					                else
+					                    return params.name+'<br/>No epidemic information';
+					            }
+					        },
+					
+							
+					        visualMap: {
+					            type: 'piecewise',
+					            pieces: [
+					                {gt: 50, color: 'darkred'},                        // (1500, Infinity]
+					                {gt: 30, lte: 50, color: 'red', colorAlpha: 1},  // (1000, 1500]
+					                {gt: 20, lte: 30, color: 'red', colorAlpha: 0.8},
+					                {gt: 10, lte: 20, color: 'red', colorAlpha: 0.6},
+					                {gt: 5, lte: 10, color: 'red', colorAlpha: 0.4},
+					                {gt: 1, lte: 5, color: 'red', colorAlpha: 0.3},
+					                {lt: 1, color: 'red', colorAlpha: 0.0}          // (-Infinity, 100)
+					            ],
+					        },
+					
+					        
+					        series: [
+					            {
+					                name: 'Confirmed cases in all provinces of the country', 
+					                zoom:1.2,
+					                type: 'map', 
+					                map: 'china', 
+					                roam: true, 
+					                label: { 
+					                    show: true,
+					                    formatter: '{b}', 
+					                    fontSize: 8
+					                },
+					                data: data.today,
+					            }
+					        ]
+					    };	
+				}
+				break;
+				case 2:{
+					opt = {
+					    
+					    title: {
+					      text: '：COVID-19 - Global cumulative data',
+					      subtext: 'Data source',
+					      sublink: 'https://www.kaikeba.com'
+					    },
+					    
+					    tooltip: {
+					      trigger: 'item', 
+					      
+					      formatter:function (params, ticket, callback) {
+					        if(params.data)
+					          return params.name+'<br/>'+params.data.value+' (unit)';
+					        else
+					          return params.name+'<br/> The number of infected persons was not disclosed';
+					      }
+					    },
+					    
+					    visualMap: {
+					      min: 1, // minimum value corresponding to the color map
+					      max: 500000, // maximum value of the color map
+					      text: ['sever', 'slight'], 
+					      realtime: true, 
+					      calculable: true, // Whether the map is updated in real time while dragging and dropping
+					      inRange: {
+					        color: ['rgba(222,0,0,0.2)','rgba(160,0,0,1)'] // Color mapping range, minimum, transition, maximum
+					      }
+					    },
+					
+					    
+					
+					
+					
+					    series: [
+					      {
+					        name: 'Confirmed cases in countries globally', 
+					        zoom:1.2,
+					        type: 'map', 
+					        map: 'world',
+					        roam: true, 
+					        label: {
+					          show: true,
+					          fontSize:8,
+					          //formatter: '{b}', 
+					          formatter:function (params, ticket, callback) {
+					            
+					            if(params.data && params.data.value>50000) {
+					              return params.name;
+					            }else{
+					              return '';
+					            }
+					          }
+					        },
+					        data: data.g_data,
+					      }
+					    ]
+					  };
+				}
+				break;
+				case 3:{
+					opt = {
+					    
+					    title: {
+					      text: 'COVID-19 - New increasing amount around the world',
+					      subtext: 'Data source',
+					      sublink: 'https://www.kaikeba.com'
+					    },
+					    
+					    tooltip: {
+					      trigger: 'item', 
+					      formatter:function (params, ticket, callback) {
+					        if(params.data)
+					          return params.name+'<br/>'+params.data.value+' (person)';
+					        else
+					          return params.name+'<br/> The number of infected persons was not disclosed';
+					      }
+					    },
+					    
+					    visualMap: {
+					      min: 0, 
+					      max: 20000, 
+					      text: ['Severe', 'Slight'], 
+					      realtime: true, 
+					      calculable: true, 
+					      inRange: {
+					        color: ['rgba(160,0,0,0)','rgba(160,0,0,1)'] 
+					      }
+					    },
+					    // 具体数据
+					    series: [
+					      {
+					        name: 'Global increasing cases', 
+					        zoom:1.2,
+					        type: 'map', 
+					        map: 'world', 
+					        roam: true, 
+					        label: { 
+					          show: true,
+					          fontSize:8,
+					          //formatter: '{b}', 
+					          formatter:function (params, ticket, callback) {
+					            
+					            if(params.data && params.data.value>1000 || params.name == 'China') {
+					              return params.name;
+					            }else{
+					              return '';
+					            }
+					          }
+					        },
+					        data: data.g_today,
+					      }
+					    ]
+					  };
+				}
+				break;
+			}
+			 myChart.setOption(opt);
+		}
+		updateMap(0);
